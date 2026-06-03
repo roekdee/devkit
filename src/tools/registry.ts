@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import JsonFormatter from "./JsonFormatter";
 import JwtDecoder from "./JwtDecoder";
 import Base64 from "./Base64";
+import UrlEncode from "./UrlEncode";
 import UuidGenerator from "./UuidGenerator";
 import TimestampConverter from "./TimestampConverter";
 import HashGenerator from "./HashGenerator";
@@ -35,6 +36,13 @@ export const TOOLS: Tool[] = [
     icon: "⇄",
     blurb: "Encode and decode Base64 (UTF-8 safe)",
     component: Base64,
+  },
+  {
+    id: "url",
+    name: "URL Encode",
+    icon: "%",
+    blurb: "Percent-encode and decode URL components",
+    component: UrlEncode,
   },
   {
     id: "uuid",
