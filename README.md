@@ -1,10 +1,8 @@
 <div align="center">
 
-# ⚡ Devkit — Developer Utilities
+# Devkit
 
-### A fast, offline-first toolbox of everyday developer utilities
-
-Six tools I kept reaching for — a JSON formatter, JWT decoder, Base64 converter, UUID generator, timestamp converter, and a hash generator — in one clean, keyboard-friendly app. **Everything runs in the browser. No network calls, no tracking, nothing leaves your machine.**
+A small toolbox of the developer utilities I kept reaching for, all in one tab.
 
 [![Live demo](https://img.shields.io/badge/▶_Live_demo-roekdee.github.io/devkit-5eead4?style=for-the-badge)](https://roekdee.github.io/devkit/)
 &nbsp;
@@ -19,47 +17,26 @@ Six tools I kept reaching for — a JSON formatter, JWT decoder, Base64 converte
 
 ---
 
-## ✨ Tools
+I was bouncing between random websites every time I needed to decode a JWT or format some JSON, so I put the ones I use most into a single app. It all runs in the browser — there's no backend, so whatever you paste in stays on your machine.
 
-| Tool | What it does |
-|---|---|
-| **JSON Formatter** | Pretty-print, minify, and validate JSON with live error messages |
-| **JWT Decoder** | Decode header & payload, with expiry detection (signature not verified — client-side) |
-| **Base64** | Encode/decode with one-click direction swap, UTF-8 safe |
-| **UUID Generator** | Bulk-generate RFC 4122 v4 UUIDs via `crypto.randomUUID()` |
-| **Timestamp** | Convert Unix epoch ↔ ISO / local / relative time |
-| **Hash** | SHA-1 / 256 / 384 / 512 digests via the Web Crypto API |
+The tools:
+
+- **JSON Formatter** — pretty-print, minify, validate, with the parse error shown inline.
+- **JWT Decoder** — shows the header and payload and flags expiry. It does *not* verify the signature (that needs the secret), so treat it as a viewer.
+- **Base64** — encode/decode, UTF-8 safe, one button to swap direction.
+- **URL Encode** — percent-encode and decode URL components.
+- **UUID Generator** — v4 UUIDs in bulk via `crypto.randomUUID()`.
+- **Timestamp** — Unix epoch to/from ISO, local, and relative time.
+- **Hash** — SHA-1/256/384/512 using the Web Crypto API.
 
 <div align="center">
 <img src="docs/jwt.png" alt="JWT decoder" width="410" />
 <img src="docs/hash.png" alt="Hash generator" width="410" />
 </div>
 
-## 🧠 Why it's built this way
+Tools are registered in [`src/tools/registry.ts`](src/tools/registry.ts) — one entry plus one component file and the sidebar, routing, and layout pick it up. Routing is hash-based (`/#/jwt`) so each tool is linkable and the static build works on GitHub Pages without server rewrites. The dark theme lives in [`src/index.css`](src/index.css) using Tailwind v4's `@theme`.
 
-- **100% client-side.** Sensitive input (tokens, payloads, text to hash) never touches a server — the app makes zero network requests at runtime. Hashing uses the native **Web Crypto API**; UUIDs use `crypto.randomUUID()`.
-- **Pluggable tool registry.** Each tool is a self-contained component registered in [`src/tools/registry.ts`](src/tools/registry.ts). Adding a new tool is one entry + one file — the sidebar, routing, and layout pick it up automatically.
-- **Hash-based routing**, so every tool is deep-linkable (`/#/jwt`) and the static build works on GitHub Pages without server rewrites.
-- **Design tokens, not magic numbers.** A small dark design system lives in [`src/index.css`](src/index.css) using Tailwind v4's `@theme`.
-
-## 🏗️ Architecture
-
-```
-src/
-  App.tsx              Shell · sidebar nav · hash router
-  index.css            Tailwind v4 theme (design tokens)
-  components/ui.tsx     Reusable primitives (Panel, CodeArea, CopyButton…)
-  tools/
-    registry.ts        Single source of truth — id, name, icon, component
-    JsonFormatter.tsx
-    JwtDecoder.tsx
-    Base64.tsx
-    UuidGenerator.tsx
-    TimestampConverter.tsx
-    HashGenerator.tsx
-```
-
-## 🚀 Run locally
+## Run locally
 
 ```bash
 npm install
@@ -67,16 +44,16 @@ npm run dev        # http://localhost:5173/devkit/
 npm run build      # type-check + production build to dist/
 ```
 
-## 📦 Deploy
+## Deploy
 
-Pushing to `main` triggers a GitHub Actions workflow ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) that builds the app and publishes `dist/` to GitHub Pages — the live demo above updates automatically.
+Pushing to `main` runs the GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and publishes `dist/` to GitHub Pages. The live demo updates on its own.
 
-## 🛠️ Tech
+## Tech
 
-React 19 · TypeScript 5 · Vite 6 · Tailwind CSS v4 · Web Crypto API · GitHub Actions → Pages
+React 19, TypeScript 5, Vite 6, Tailwind CSS v4, Web Crypto API, GitHub Actions to Pages.
 
----
+## Notes
 
-<div align="center">
-<sub>No backend, no database, no telemetry — just static files and the browser's own APIs.</sub>
-</div>
+The pluggable registry is the part I'm happiest with — adding a tool really is just two small changes and nothing else has to know about it.
+
+A few honest caveats. The JWT decoder doesn't (and can't, client-side) verify signatures, so it won't catch a tampered token — it's for reading, not trusting. Everything is in-memory: there's no history, and a refresh clears whatever you had open. And the bundle isn't code-split yet, so every tool loads up front. That's fine at this size but I'd split it if I added much more.
