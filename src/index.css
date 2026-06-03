@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* ===========================================================
+   Devkit — design tokens
+   Direction: dark, terminal-inspired, calm neon accents
+   =========================================================== */
+@theme {
+  --color-bg: #0b0e14;
+  --color-surface: #11151f;
+  --color-surface-2: #161b27;
+  --color-border: #232a39;
+  --color-muted: #6b7689;
+  --color-text: #e6eaf2;
+  --color-accent: #5eead4;
+  --color-accent-2: #818cf8;
+  --color-danger: #f87171;
+  --color-warn: #fbbf24;
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code",
+    "Fira Code", monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgba(129, 140, 248, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(94, 234, 212, 0.06), transparent 55%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* thin custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+textarea,
+input,
+pre,
+code {
+  font-family: var(--font-mono);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-in {
+  animation: fade-in 0.32s var(--ease-out-expo) both;
+}
